@@ -39,7 +39,7 @@ public class CatalogoServicio {
     }
     //obtener un videojuego especifico mediante su ID
     public RespuestaProductoDTO obtenerPorId(Long id){
-        Producto juego = productoRepositorio.findById(id).orElseThrow(()-> new ProductoNoEncontradoExcepcion("El juego no fue encontrado"))
+        Producto juego = productoRepositorio.findById(id).orElseThrow(()-> new ProductoNoEncontradoExcepcion("El juego no fue encontrado"));
                 return convertirDto(juego);
     }
 
