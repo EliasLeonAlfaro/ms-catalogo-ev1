@@ -12,6 +12,7 @@ import java.math.BigDecimal;
 @Builder
 public class RespuestaProductoDTO {
     //objeto expuesto para no devolevr la entidad JPAasd
+    private Long id;
     private String nombre;
     private String descripcion;
     private BigDecimal precio;

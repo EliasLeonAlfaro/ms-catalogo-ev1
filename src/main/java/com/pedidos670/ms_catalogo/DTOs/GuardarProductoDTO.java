@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @Builder
 public class GuardarProductoDTO {
     //Datos que se deben recibir desde el front o BFF para crear un juego o editarlo
+    private Long id;
     private String nombre;
     private String descripcion;
     private BigDecimal precio;
