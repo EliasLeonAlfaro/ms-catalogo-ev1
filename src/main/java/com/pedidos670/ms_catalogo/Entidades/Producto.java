@@ -27,7 +27,7 @@ public class Producto {
     private String nombre;
 
     // Breve descripcion del juego
-    @Column(name = "DESCRIPTION", length = 500)
+    @Column(name = "DESCRIPCION", length = 500)
     private String descripcion;
 
     // Precio con decimales

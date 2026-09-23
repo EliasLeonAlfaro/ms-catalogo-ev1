@@ -1,0 +1,12 @@
+catalogo_high = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g4a49f714d709d4_catalogo_high.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+catalogo_medium = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g4a49f714d709d4_catalogo_medium.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+catalogo_low = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g4a49f714d709d4_catalogo_low.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+catalogo_tp = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g4a49f714d709d4_catalogo_tp.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+catalogo_tpurgent = (description= (retry_count=20)(retry_delay=3)(address=(protocol=tcps)(port=1522)(host=adb.sa-santiago-1.oraclecloud.com))(connect_data=(service_name=g4a49f714d709d4_catalogo_tpurgent.adb.oraclecloud.com))(security=(ssl_server_dn_match=yes)))
+
+
+
