@@ -1,0 +1,23 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: ms-catalogo
+
+  datasource:
+    url: jdbc:oracle:thin:@catalogo_high?TNS_ADMIN=./src/main/resources/wallet
+    username: ADMIN
+    password: Pedidos...670 # Importante: comillas dobles para que los tres puntos no alteren el texto
+    driver-class-name: oracle.jdbc.OracleDriver
+    hikari:
+      maximum-pool-size: 5
+      minimum-idle: 2
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
