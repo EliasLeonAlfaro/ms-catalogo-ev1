@@ -1,0 +1,60 @@
+name: Deploy Catalogo v2asdasdasdsad
+
+on:
+  push:
+    branches:
+      - deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/ec2_key
+          chmod 600 ~/.ssh/ec2_key
+          ssh-keyscan -H "${{ secrets.EC2_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Crear carpeta remota
+        run: |
+          ssh -i ~/.ssh/ec2_key \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" \
+            "mkdir -p ~/cloudnative/ms-catalogo"
+
+      - name: Copiar proyecto a EC2
+        run: |
+          scp -i ~/.ssh/ec2_key -r \
+            Dockerfile \
+            .dockerignore \
+            pom.xml \
+            src \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}:~/cloudnative/ms-catalogo/"
+
+      - name: Desplegar Catalogo
+        run: |
+          ssh -i ~/.ssh/ec2_key \
+            "${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }}" << 'EOF'
+
+          cd ~/cloudnative/ms-catalogo
+
+          docker build -t ms-catalogo .
+
+          docker rm -f ms-catalogo || true
+
+          docker run -d \
+            --name ms-catalogo \
+            --restart unless-stopped \
+            --network cloudnative-network \
+            -p 8082:8082 \
+            --env-file ~/cloudnative/catalogo.env \
+            -v /home/ec2-user/cloudnative/wallet-catalogo:/app/wallet:ro \
+            ms-catalogo
+
+          docker image prune -f
+
+          EOF
