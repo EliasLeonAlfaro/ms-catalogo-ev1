@@ -8,11 +8,11 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@catalogo_high?TNS_ADMIN=./src/main/resources/wallet
     username: ADMIN
-    password: Pedidos...670 # Importante: comillas dobles para que los tres puntos no alteren el texto
+    password: Pedidos...670
     driver-class-name: oracle.jdbc.OracleDriver
     hikari:
       maximum-pool-size: 5
-      minimum-idle: 2
+      minimum-idle: 4
 
   jpa:
     hibernate:
