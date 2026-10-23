@@ -6,10 +6,11 @@ spring:
     name: ms-catalogo
 
   datasource:
-    url: jdbc:oracle:thin:@catalogo_high?TNS_ADMIN=./src/main/resources/wallet
-    username: ADMIN
-    password: Pedidos...670
-    driver-class-name: oracle.jdbc.OracleDriver
+    url: jdbc:postgresql://localhost:5432/catalogo
+    username: postgres
+    password: 'admin'
+    driver-class-name: org.postgresql.Driver
+
     hikari:
       maximum-pool-size: 5
       minimum-idle: 4
