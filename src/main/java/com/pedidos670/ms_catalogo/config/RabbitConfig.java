@@ -11,8 +11,10 @@ import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 
 @Configuration
+@EnableRabbit
 public class RabbitConfig {
 
     public static final String EXCHANGE_PEDIDOS =
