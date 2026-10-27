@@ -31,7 +31,7 @@ public class StockEventListener {
     private final ProcessedEventRepository processedEventRepository;
 
     @RabbitListener(
-            queues = RabbitConfig.QUEUE_CATALOGO_STOCK,
+            queues = RabbitNames.CATALOGO_STOCK_QUEUE,
             autoStartup = "${APP_RABBITMQ_LISTENER_ENABLED:false}"
     )
     @Transactional

@@ -1,47 +1,25 @@
 package com.pedidos670.ms_catalogo.config;
 
+import com.pedidos670.ms_catalogo.messaging.RabbitNames;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.QueueBuilder;
 import org.springframework.amqp.core.TopicExchange;
-import org.springframework.amqp.rabbit.connection.ConnectionFactory;
-import org.springframework.amqp.rabbit.core.RabbitAdmin;
-import org.springframework.boot.ApplicationRunner;
+import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 
 @Configuration
 @EnableRabbit
 public class RabbitConfig {
 
-    public static final String EXCHANGE_PEDIDOS =
-            "pedidos.events";
-
-    public static final String QUEUE_CATALOGO_STOCK =
-            "catalogo.stock.queue";
-
-    public static final String ROUTING_PEDIDO_ACEPTADO =
-            "pedido.aceptado";
-
-
-    public static final String DLX_PEDIDOS =
-            "pedidos.dlx";
-
-    public static final String DLQ_CATALOGO_STOCK =
-            "catalogo.stock.dlq";
-
-    public static final String DLQ_ROUTING_KEY =
-            "catalogo.stock.dlq";
-
-
     @Bean
     public TopicExchange pedidosExchange() {
-
         return new TopicExchange(
-                EXCHANGE_PEDIDOS,
+                RabbitNames.PEDIDOS_EXCHANGE,
                 true,
                 false
         );
@@ -49,115 +27,47 @@ public class RabbitConfig {
 
     @Bean
     public Queue catalogoStockQueue() {
-
         return QueueBuilder
-                .durable(QUEUE_CATALOGO_STOCK)
+                .durable(RabbitNames.CATALOGO_STOCK_QUEUE)
                 .build();
     }
 
     @Bean
     public Binding catalogoStockBinding(
-            Queue catalogoStockQueue,
-            TopicExchange pedidosExchange
+            @Qualifier("catalogoStockQueue") Queue catalogoStockQueue,
+            @Qualifier("pedidosExchange") TopicExchange pedidosExchange
     ) {
-
         return BindingBuilder
                 .bind(catalogoStockQueue)
                 .to(pedidosExchange)
-                .with(ROUTING_PEDIDO_ACEPTADO);
+                .with(RabbitNames.PEDIDO_ACEPTADO_ROUTING_KEY);
     }
-
-
-    /*
-     * DEAD LETTER
-     */
 
     @Bean
     public DirectExchange pedidosDeadLetterExchange() {
-
         return new DirectExchange(
-                DLX_PEDIDOS,
+                RabbitNames.PEDIDOS_DLX,
                 true,
                 false
         );
     }
 
     @Bean
-    public Queue catalogoStockDeadLetterQueue() {
-
+    public Queue catalogoStockDlq() {
         return QueueBuilder
-                .durable(DLQ_CATALOGO_STOCK)
+                .durable(RabbitNames.CATALOGO_STOCK_DLQ)
                 .build();
     }
 
     @Bean
-    public Binding catalogoStockDeadLetterBinding(
-            Queue catalogoStockDeadLetterQueue,
+    public Binding catalogoStockDlqBinding(
+            @Qualifier("catalogoStockDlq") Queue catalogoStockDlq,
+            @Qualifier("pedidosDeadLetterExchange")
             DirectExchange pedidosDeadLetterExchange
     ) {
-
         return BindingBuilder
-                .bind(catalogoStockDeadLetterQueue)
+                .bind(catalogoStockDlq)
                 .to(pedidosDeadLetterExchange)
-                .with(DLQ_ROUTING_KEY);
-    }
-
-
-    /*
-     * Fuerza la creación de la topología
-     * aunque el listener todavía esté desactivado.
-     */
-    @Bean
-    public ApplicationRunner initializeRabbitMQ(
-            ConnectionFactory connectionFactory,
-            TopicExchange pedidosExchange,
-            Queue catalogoStockQueue,
-            Binding catalogoStockBinding,
-            DirectExchange pedidosDeadLetterExchange,
-            Queue catalogoStockDeadLetterQueue,
-            Binding catalogoStockDeadLetterBinding
-    ) {
-
-        return args -> {
-
-            RabbitAdmin rabbitAdmin =
-                    new RabbitAdmin(connectionFactory);
-
-            rabbitAdmin.declareExchange(
-                    pedidosExchange
-            );
-
-            rabbitAdmin.declareQueue(
-                    catalogoStockQueue
-            );
-
-            rabbitAdmin.declareBinding(
-                    catalogoStockBinding
-            );
-
-            rabbitAdmin.declareExchange(
-                    pedidosDeadLetterExchange
-            );
-
-            rabbitAdmin.declareQueue(
-                    catalogoStockDeadLetterQueue
-            );
-
-            rabbitAdmin.declareBinding(
-                    catalogoStockDeadLetterBinding
-            );
-
-            System.out.println(
-                    "RabbitMQ ms-catalogo inicializado correctamente"
-            );
-
-            System.out.println(
-                    "Queue: " + QUEUE_CATALOGO_STOCK
-            );
-
-            System.out.println(
-                    "DLQ: " + DLQ_CATALOGO_STOCK
-            );
-        };
+                .with(RabbitNames.CATALOGO_STOCK_DLQ_ROUTING_KEY);
     }
 }
